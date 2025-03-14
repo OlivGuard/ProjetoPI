@@ -1,0 +1,1 @@
+Nesta pasta ficará armazenado a versão em grupo do simulador financeiro

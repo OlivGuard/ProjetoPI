@@ -43,6 +43,7 @@ tipoLeitura AS 'Tipo de Leitura' FROM descSensor;
 CREATE TABLE dadosSensor(
 	idDados INT PRIMARY KEY AUTO_INCREMENT,
     dado FLOAT,
+    nivelMedicao VARCHAR(20),
     statusSensor VARCHAR(15),
     dtDado DATETIME
 );
@@ -63,7 +64,12 @@ SELECT * FROM dadosSensor;
 
 SELECT dado AS 'Dado do Sensor',
 statusSensor AS 'Status do sensor',
-dtDado AS 'Data do Dado' FROM dadosSensor;
+dtDado AS 'Data do Dado', 
+CASE nivelMedicao
+		WHEN dado >= 0 AND dado <= 49 THEN nivelMedicao = 'Umidade muito Baixa'
+        WHEN dado >= 50 AND dado <= 85 THEN nivelMedicao = 'Umidade ideal'
+        WHEN dado >= 85 THEN nivelMedicao = 'Umidade muito alta'
+    END AS 'Nivel de Medição' FROM dadosSensor; 
 
 CREATE TABLE pedido(
 	idPedido INT PRIMARY KEY AUTO_INCREMENT,

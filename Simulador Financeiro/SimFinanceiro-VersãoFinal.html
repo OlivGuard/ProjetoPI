@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Financeiro</title>
+    <link rel="shortcut icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple115/v4/82/a3/55/82a355bb-5e73-e8b5-9642-d18d32b8e05c/source/512x512bb.jpg">
+</head >
+<body style=" background-color:#acd689; ">
+    
+    <center>
+        <h1 style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 45px; color:#111111">
+            Simulador financeiro!
+        </h1>
+    <hr>
+        <p style="color:#111111; font-family:initial;font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;font-size:large;" >
+            Simulador financeiro para produtores de oliva que sofrem com a seca/baixa umidade do solo.
+            <br>______________________
+        </p>
+
+    <p style="color:#111111; font-family: monospace; font-size: larger;">
+            Qual <b>Tamanho</b> da sua plantação? :                       <input type="number" id="input_tamanho">   
+            <select name="" id="medida_uni">
+                <option selected disabled value="0"> Escolha a Unidade de Tamanho </option>
+                <option value="hec">Hectare</option>
+                <option value="km²">KM²</option>
+            </select>
+        <br>
+            Qual é sua <b>Meta de Produção</b> para esse Ano? :           <input type="number" id="input_meta"       placeholder="TON p/Hectare">   (toneladas p/ hectare)
+        <br>
+            Qual <b>Valor</b> do seu produto por <b>KG?</b> :              <input type="number" id="input_valor_prod" placeholder="R$">   (R$)
+        <br>
+            Qual <b>Porcentagem de Perda</b> você tem em sua plantação? : <input type="number" id="input_perc"       placeholder="%">        (%)
+        <br>
+            Você Monitora a <b>Umidade</b> de sua Produção? :      
+
+            <button id="button_sim" onclick="sim_função()" style="font-family: monospace;">Sim</button>
+            <button id="button_nao" onclick="nao_função()" style="font-family: monospace;">Não</button>
+        <br>
+    </p>
+            <button onclick="verify_values()" style="color:#335f11;">Calcular produção                                </button>
+        <br>
+
+            <div id="div_mensagem" style="font-family: monospace;">                                                     </div>
+            <div id="div_button" style="font-family: 'Times New Roman', Times, serif;">                                 </div>
+            <div id="div_mensagem2" style="font-family: 'Times New Roman', Times, serif;">                              </div>
+
+    <hr>
+
+        <i style="font-size: smaller;">
+            Informações aos Clientes!: 
+        <br>
+            Produção média por hectare de oliva = 2.5 - 10 TON
+        <br>
+            1 Hectare = 1000 KM²
+        </i>
+       
+
+</center>
+</body>
+<script>
+    //variavel do botão sim ou nao
+    var monitoramento
+    function sim_função(){
+        button_sim.innerHTML = `<spam style="color:blue;font-family: monospace;">>Sim<</spam>`;
+        button_nao.innerHTML = `<spam style="color:black;font-family: monospace;">Não</spam>`;
+        monitoramento = 'Sim';
+    }
+    function nao_função(){
+        button_nao.innerHTML = `<spam style="color:red;font-family: monospace;">>Não<</spam>`;
+        button_sim.innerHTML = `<spam style="color:back;font-family: monospace;">Sim</spam>`;
+        monitoramento = 'Nao';
+    }
+    // funcção de verificação
+    function verify_values(){
+        //valores a serem verificados
+        var tam = Number(input_tamanho.value);
+        var meta = Number(input_meta.value);
+        var valor_prod = Number(input_valor_prod.value);
+        var perc = Number(input_perc.value)
+        var medida = medida_uni.value;
+        monitoramento
+
+        //variavel que indentifica se todos os requisitos estão sendo cumpridos
+        var verificação = 5;
+        
+        if(perc > 100){
+            alert('A Porcentagem inserida é invalida!. Tente Novamente!')
+            verificação -= 1
+    
+        }
+        if(perc < 1){
+            alert('A Porcentagem inserida é invalida!. Tente Novamente!')
+            verificação -= 1
+        }
+        if(tam <= 0){
+            alert('O Tamanho de sua fazenda é invalido. Tente Novamente!')
+            verificação -= 1
+        }
+        if(meta <= 0){
+            alert('A Sua meta é invalida. Tente Novamente!')
+            verificação -= 1
+        }
+        if(valor_prod <= 0){
+            alert('O Seu valor de produção é invalido, Tente novamente!')
+            verificação -= 1
+        }
+        if(monitoramento == undefined){
+            alert('Selecione se sua plantação é ou não monitorada!')
+        }
+        if(medida == 0){
+            alert('Selecione uma Unidade de Medida de Acordo com a Sua Plantação')
+        }
+        if(verificação == 5){
+            calcular_prod()
+        }else{
+            div_mensagem.innerHTML = ``
+        }
+    }
+    //função de calculo de produção
+    function calcular_prod(){
+        //variaveis input
+            var porc = Number(input_perc.value);
+            var tam = Number(input_tamanho.value);
+            var meta = Number(input_meta.value);
+            var valor_prod = Number(input_valor_prod.value);
+            var hectares
+            monitoramento;
+
+            var medida = medida_uni.value;
+            if(medida == 'hec'){
+                hectares = tam
+                tam = tam / 100
+            }
+            if(medida == 'km²'){
+                tam = tam 
+                meta / 100
+                hectares = tam * 100
+            }
+
+            
+
+        //variaveis de perda e diferença
+            var prod = hectares * meta;
+            var perda = prod * (porc/100);
+            var resto = prod - perda
+
+        //variaveis após os calculos
+            var prod_tam = (prod / hectares) * 100;
+
+        //variaveis de precificação
+
+            var valor = (prod * 1000) * valor_prod;
+            var valor_perda = (perda * 1000) * valor_prod;
+            var valor_restante = valor - valor_perda;
+            
+            
+
+        // Exibe na div_mensagem o quanto o cliente esta perdendo sem o monitoramento.
+
+        if(monitoramento == "Nao"){
+        div_mensagem.innerHTML = 
+        `
+        <b style="font-size:larger">
+            <hr>
+                <br>
+                        SEM MONITORAMENTO VOCÊ
+                <br>
+                        EM UMA ÁREA DE 
+                    <spam style="font-size:22px;">
+                            ${hectares.toFixed(0)} HECTARES
+                    </spam> 
+                        COM UMA META DE
+                    <spam style="font-size:22px;">
+                            ${meta.toFixed(0)} TON/Hectare
+                    </spam> 
+                    <p style="color:rgb(189, 12, 12">
+                         PRODUZ UM TOTAL DE
+                        <spam style="font-size:22px;">
+                            ${prod.toFixed(1)} TON
+                        </spam> 
+                         !
+                    </p>
+                    <p style="color:rgb(189, 12, 12">
+                        
+                         MAS VOCE PODE PERDER 
+                         <spam style="font-size:22px;">
+                             ${porc.toFixed(2)}%
+                        </spam>
+                        ou
+                        <spam style="font-size:22px;">
+                             ${perda.toFixed(1)} TON
+                        </spam> 
+                        DA SUA PRODUÇÃO! RESTANDO:
+                        <spam style="font-size:22px;color:black">
+                             ${resto.toFixed(1)} TON
+                        </spam>
+                <br>
+                        
+                    </p>
+                <br>
+            <hr>
+                <br>
+                        NO FATURAMENTO
+                <br>
+                        VENDENDO 
+                        <spam style="font-size:22px;">
+                           1 KG
+                        </spam> 
+                        KG POR
+                        <spam style="font-size:22px;">
+                            R$ ${valor_prod.toLocaleString('pt-br', {minimumFractionDigits:2})} 
+                        </spam> 
+                        RESULTANDO EM 
+                        <spam style="font-size:22px;">
+                            R$ ${(valor_prod * 1000).toLocaleString('pt-br', {minimumFractionDigits:2})}
+                        </spam> 
+                        POR
+                        <spam style="font-size:22px;">
+                            TONELADA
+                        </spam> 
+                    <p style="color:rgb(189, 12, 12"> 
+                        AO FINAL DE SUA COLHEITA DE 
+                        <spam style="font-size:22px;">
+                             ${resto.toFixed(1)} TON
+                        </spam> 
+                        VOCE IRA RECEBER
+                        <spam style="font-size:22px;">
+                             R$${valor_restante.toLocaleString('pt-br', {minimumFractionDigits:2})} 
+                        </spam> 
+                        DE SUA PRODUÇÃO!
+                    <br >
+                        VOCE PERDE 
+                        <spam style="font-size:22px;">
+                             ${perda.toFixed(1)} TON
+                        </spam> 
+                        TOTALIZANDO UM VALOR DE
+                        <spam style="font-size:22px;">
+                             R$${valor_perda.toLocaleString('pt-br', {minimumFractionDigits:2})}    
+                        </spam> 
+                        DA SUA PRODUÇÃO
+                    </p>
+                    <p style="color:#335f11;"> 
+                            DE TODAS AS
+                            <spam style="font-size:22px;color:#335f11;">
+                                ${prod.toFixed(1)} TON
+                            </spam> 
+                        VOCE DEIXA DE RECEBER UM TOTAL DE 
+                            <spam style="font-size:22px;color:#335f11;">
+                                R$${valor.toLocaleString('pt-br', {minimumFractionDigits:2})} 
+                            </spam>           
+                            
+                    </p>
+                <br>
+            <hr>
+                <br>
+        </b>
+        <button onclick="calcular()">CALCULE QUANTO CUSTARIA NOSSO PRODUTO PARA VOCẼ!</button>`;
+        div_mensagem2.innerHTML =``;
+        }
+
+
+        // Exibe na div_mensagem o quanto o cliente evita perder tendo o monitoramento
+
+
+        if(monitoramento == 'Sim'){
+        div_mensagem.innerHTML = 
+        `
+        <b style="font-size:larger">
+            <hr>
+                <br>
+                        COM MONITORAMENTO VOCÊ:
+                <br>
+                <br> 
+                    <p style="color:#335f11;">
+                        COM O MONITORAMENTO VOCÊ EVITA A PERDA DE 
+                        <spam style="font-size:22px;color:rgb(189, 12, 12">
+                            ${perda.toFixed(1)} TON
+                        </spam>
+                         DE SUA PRODUÇÃO!
+                    </p>
+                    <p style="color:#335f11;"> 
+                        DESSA FORMA VOCÊ PRODUZ  
+                        <spam style="font-size:22px">
+                             ${prod.toFixed(1)} TON
+                        </spam>
+                        NO TOTAL DE SUA COLHEITA!
+                    </p>
+                <br>
+            <hr>
+                <br>
+                        NO FATURAMENTO:
+                <br>
+                    <p style="color:#335f11"> 
+                            AO FINAL DA SUA COLHEITA DE
+                        <spam style="font-size:22px;color:green">
+                            ${prod_tam.toFixed(1)} TON
+                        </spam>
+                            VOCÊ RECEBE 
+                        <spam style="font-size:22px;color:green">
+                            R$${valor.toLocaleString('pt-br', {minimumFractionDigits:2})}
+                        </spam>
+                            PELA SUA PRODUÇÃO!
+                    </p>
+                    <p style="color:#335f11;"> 
+                            VOCÊ EVITA A PERDA DE
+                        <spam style="font-size:22px;color:orange">
+                            ${perda.toFixed(1)} TON
+                        </spam>
+                            TOTALIZANDO
+                        <spam style="font-size:22px;color:orange">
+                            R$${valor_perda.toLocaleString('pt-br', {minimumFractionDigits:2})} 
+                        </spam>
+                            DA SUA PRODUÇÃO!
+                    </p>
+                <br>
+            <hr>
+                <br>
+        </b>`;
+
+        div_button.innerHTML =``;
+        div_mensagem2.innerHTML =``;
+        }  
+    }
+    // Função do botão para calcular quanto o sistema de monitoramento iria reduzir nas perdas
+    function calcular(){
+        //variaveis input
+            var tam = Number(input_tamanho.value);
+            var meta = Number(input_meta.value);
+            var valor_prod = Number(input_valor_prod.value);
+            var perc = Number(input_perc.value)
+
+            var medida = medida_uni.value;
+            if(medida == 'hec'){
+                hectares = tam
+                tam = tam / 100
+            }
+            if(medida == 'km²'){
+                tam = tam 
+                meta / 100
+                hectares = tam * 100
+            }
+
+        //variavel de perda
+            var prod = (tam * 100) * meta
+            var perda = prod * (perc/100)
+            var valor_perda = ((1000 * perda) * valor_prod) * 0.85;
+
+        //varriavel de monitoramento
+            var sensores = tam * 10000
+            var valor_moni = sensores * 80;
+
+        //variavel valor interiro
+            var valor = ((1000* prod) * valor_prod) - valor_moni;
+            
+
+
+        div_mensagem2.innerHTML =
+        `       
+                Com nosso monitoramento:
+        <br>
+        <br>        
+                Você Nos Contrata Por: R$
+                <spam style="color:orange">
+                ${valor_moni.toLocaleString('pt-br', {minimumFractionDigits:2})}
+                </spam>
+        <br>        
+                <i style="font-size:small">-Valor Único Pela Instalação dos sensores em sua propriedade-</i>
+        <br>
+                Porém deixa de perder ao menos 85% de sua produção ou : R$
+                <spam style="color:green">
+                ${valor_perda.toLocaleString('pt-br', {minimumFractionDigits:2})}
+                </spam>
+        <br>
+        <br>
+        `
+    }
+</script>
+</html>
+
+
+

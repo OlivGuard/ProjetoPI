@@ -56,12 +56,12 @@ CREATE TABLE dadosSensor(
 ALTER TABLE dadosSensor ADD CONSTRAINT chkStatusSensor 
 	CHECK(statusSensor IN('Ativo','Inativo'));
     
-INSERT INTO dadosSensor (dado, statusSensor) VALUES 
-(34.5, 'Ativo'),
-(28.2, 'Ativo'),
-(22.7, 'Inativo'),
-(40.3, 'Ativo'),
-(19.8, 'Inativo');
+INSERT INTO dadosSensor (dado, statusSensor, dtDado) VALUES 
+(34.5, 'Ativo', CURRENT_TIMESTAMP),
+(28.2, 'Ativo', CURRENT_TIMESTAMP),
+(22.7, 'Inativo', CURRENT_TIMESTAMP),
+(40.3, 'Ativo', CURRENT_TIMESTAMP),
+(19.8, 'Inativo', CURRENT_TIMESTAMP);
 
 UPDATE dadosSensor SET statusSensor = 'Inativo' WHERE idDados = 1;
 
@@ -69,12 +69,7 @@ SELECT * FROM dadosSensor;
 
 SELECT dado AS 'Dado do Sensor',
 statusSensor AS 'Status do sensor',
-dtDado AS 'Data do Dado', 
-CASE nivelMedicao
-		WHEN dado >= 0 AND dado <= 49 THEN nivelMedicao = 'Umidade muito Baixa'
-        WHEN dado >= 50 AND dado <= 85 THEN nivelMedicao = 'Umidade ideal'
-        WHEN dado >= 85 THEN nivelMedicao = 'Umidade muito alta'
-    END AS 'Nivel de Medição' FROM dadosSensor; 
+dtDado AS 'Data do Dado' FROM dadosSensor; 
 
 CREATE TABLE pedido(
 	idPedido INT PRIMARY KEY AUTO_INCREMENT,

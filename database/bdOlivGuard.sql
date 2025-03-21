@@ -123,9 +123,9 @@ UPDATE cadastro SET cpf = NULL WHERE idCadastro >=4;
 UPDATE cadastro SET telefone = NULL WHERE idCadastro >=4;
 
 SELECT nome AS 'Nome Usuário', 
-IFNULL(cpf, 'CPF não informado') AS 'CPF', 
-cnpj AS 'CNPJ', 
-email AS 'Email', 
-senha AS 'Senha', 
-cep AS 'CEP', 
-IFNULL(telefone, 'Telefone não informado') AS 'Telefone' FROM cadastro;
+IFNULL(cpf, 'CPF não informado') AS CPF, 
+cnpj AS CNPJ, 
+email AS Email, 
+senha AS Senha, 
+cep AS CEP, 
+IFNULL(telefone, 'Telefone não informado') AS Telefone FROM cadastro;
